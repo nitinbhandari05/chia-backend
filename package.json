@@ -1,12 +1,14 @@
 {
   "name": "chia-backend",
   "version": "1.0.0",
+
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.js",
   },
   "keywords": [],
-  "author": "",
+  "author": "Nitin Bhandari",
   "license": "ISC",
   "description": ""
 }
