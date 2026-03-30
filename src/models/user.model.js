@@ -31,12 +31,12 @@ const userSchema = new Schema({
     coverImage: {
         type: String, // cloudnary url
     },
-    watchHistroy: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "vedio"
-        }
-    ],
+    // watchHistroy: [
+    //     {
+    //         type: Schema.Types.ObjectId,
+    //         ref: "vedio"
+    //     }
+    // ],
     password: {
         type: String,
         req: [true, 'password is required']
@@ -52,7 +52,7 @@ userSchema.pre("save", async function (next) {
     if (!this.isModified("passwaord"))
         return next();
 
-    this.password = bcrypt.hash(this.password, 10)
+    this.password = await  bcrypt.hash(this.password, 10)
     next()
 })
 
