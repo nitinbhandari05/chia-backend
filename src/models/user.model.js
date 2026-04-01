@@ -31,7 +31,7 @@ const userSchema = new Schema({
     coverImage: {
         type: String, // cloudnary url
     },
-    watchHistroy: [
+    watchHistory: [
         {
             type: Schema.Types.ObjectId,
             ref: "vedio"
@@ -41,7 +41,7 @@ const userSchema = new Schema({
         type: String,
         req: [true, 'password is required']
     },
-    referenceToken: {
+    refreshToken: {
         type: String
     }
 },
@@ -60,7 +60,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
 }
 
 userSchema.methods.generateAccessToken = function () {
-    return Jwt.sing({
+    return jwt.sign({
         _id: this._id,
         email: this.email,
         username: this.username,
@@ -68,7 +68,7 @@ userSchema.methods.generateAccessToken = function () {
     },
         process.env.ACCESS_TOKEN_SECRET,
         {
-            expressIn: process.env.ACCESS_TOKEN_EXPIRY
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
         }
     )
 }

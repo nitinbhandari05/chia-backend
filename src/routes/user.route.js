@@ -1,11 +1,13 @@
 import { Router } from "express";
 import { loginUser, logoutUser, registerUser } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
-import { verify } from "jsonwebtoken";
+import { verifyJWT } from "../middlewares/auth.middleware.js"; // ✅ your middleware
 
 const router = Router();
 
-router.post( "/register").post(
+// Register
+router.post(
+  "/register",
   upload.fields([
     { name: "avatar", maxCount: 1 },
     { name: "coverImage", maxCount: 1 },
@@ -13,9 +15,10 @@ router.post( "/register").post(
   registerUser
 );
 
-router.route("/login").post(loginUser)
+// Login
+router.post("/login", loginUser);
 
-// secured routes
-router.route("/logout").post(verify, logoutUser)
+// Protected route
+router.post("/logout", verifyJWT, logoutUser);
 
 export default router;
