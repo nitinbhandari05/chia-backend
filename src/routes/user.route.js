@@ -43,7 +43,7 @@ router.route("/avatar").patch(verifyJWT, upload.single("avatar"), updatUserAvata
 router.route("/cover-image").patch(verifyJWT, upload.single("coverImage"), updatUserCoverImage)
 router.route("/c/:username").get(verifyJWT, getUserChannelProfile)
 router.route("/history").get(verifyJWT, getWatchHistroy)
-router.route("/avatar").delete(verifyJWT,deleteOldAvatar)
+router.route("/delete-avatar").delete(verifyJWT,deleteOldAvatar)
 
 
 
