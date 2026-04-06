@@ -20,7 +20,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
     .skip((page -1)*limit)
     .limit(Number(limit))
 
-    const totalComments = await Comment.countDocument({ video : videoId})
+    const totalComments = await Comment.countDocuments({ video : videoId})
 
     return res.status(200).json(
         new ApiResponse(200,{
@@ -35,6 +35,22 @@ const getVideoComments = asyncHandler(async (req, res) => {
 
 const addComment = asyncHandler(async (req, res) => {
     // TODO: add a comment to a video
+     const { content } = req.body;
+    const { videoId } = req.params;
+
+    if (!content || content.trim() === "") {
+        throw new ApiError(400, "Comment content is required");
+    }
+
+    const comment = await Comment.create({
+        content,
+        video: videoId,
+        owner: req.user._id
+    });
+
+    return res.status(201).json(
+        new ApiResponse(200, comment, "Comment added successfully")
+    );
 })
 
 const updateComment = asyncHandler(async (req, res) => {
@@ -75,7 +91,31 @@ const updateComment = asyncHandler(async (req, res) => {
 })
 
 const deleteComment = asyncHandler(async (req, res) => {
-    // TODO: delete a comment
+    // TODO: delete a comment'
+    const { commentId } = req.params;
+    const { content } = req.body;
+
+    if (!content || content.trim() === "") {
+        throw new ApiError(400, "Content is required");
+    }
+
+    const comment = await Comment.findById(commentId);
+
+    if (!comment) {
+        throw new ApiError(404, "Comment not found");
+    }
+
+    // Only owner can update
+    if (comment.owner.toString() !== req.user._id.toString()) {
+        throw new ApiError(403, "Unauthorized");
+    }
+
+    comment.content = content;
+    await comment.save();
+
+    return res.status(200).json(
+        new ApiResponse(200, comment, "Comment updated successfully")
+    );
 })
 
 export {
